@@ -1,2 +1,2 @@
-# intelehealth-path-prescription
-Repository for Path Prescription
+# intelehealth-fhir-prescription
+Repository for FHIR Prescription
