@@ -1,0 +1,8 @@
+services:
+   prescription:
+      build: .
+      image: prescription:1.0
+      container_name: prescription
+      ports:
+         - "5003:5003"
+      command: /bin/bash -c "java -jar /app/target/prescription.data.exchange-0.0.1-SNAPSHOT.jar"
