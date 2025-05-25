@@ -306,7 +306,7 @@ public class DataSendToFHIR extends IHConstant {
 			throw new MpiNotFoundException("MPI not found");
 		}
 		System.out.println("MPI : "+mpiId);
-		request.getSubject().setReference(baseURL + mpiId);
+		request.getSubject().setReference(baseURL +"Patient/"+ mpiId);
 
 		// Encounter
 		String encounter = request.getEncounter().getReference();
