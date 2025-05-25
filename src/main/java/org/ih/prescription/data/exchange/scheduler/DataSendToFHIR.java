@@ -56,7 +56,7 @@ public class DataSendToFHIR extends IHConstant {
 	@Autowired
 	private DataExchangeAuditLogService dataExchangeService;
 
-	@Scheduled(fixedDelay = 60000, initialDelay = 60000)
+	@Scheduled(fixedDelay = 60000, initialDelay = 500)
 	public void scheduleTaskUsingCronExpression()
 			throws ParseException, UnsupportedEncodingException, DataFormatException {
 
@@ -297,9 +297,16 @@ public class DataSendToFHIR extends IHConstant {
 		String ref = request.getMedicationReference().getReference();
 		request.getMedicationReference().setReference(baseURL + ref);
 
+		
 		// Patient
-		String patient = request.getSubject().getReference();
-		request.getSubject().setReference(baseURL + patient);
+		String patientRef = request.getSubject().getReference().split("/")[1];
+		System.out.println("Patient Ref: "+patientRef);
+		String mpiId = commonOperationService.getMPIUsingPatientReference(patientRef);
+		if(mpiId==null) {
+			throw new MpiNotFoundException("MPI not found");
+		}
+		System.out.println("MPI : "+mpiId);
+		request.getSubject().setReference(baseURL + mpiId);
 
 		// Encounter
 		String encounter = request.getEncounter().getReference();

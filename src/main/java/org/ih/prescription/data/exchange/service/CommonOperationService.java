@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.ih.prescription.data.exchange.domain.CompletedRecord;
@@ -58,6 +59,33 @@ public class CommonOperationService {
 
 		}
 		return records;
+	}
+	
+	public String getMPIUsingPatientReference(String reference) {
+	    String sql = "SELECT "
+	               + " identifier as mpi "
+	               + "FROM "
+	               + " patient_identifier pi2 "
+	               + "JOIN patient_identifier_type pit ON "
+	               + " pi2.identifier_type = pit.patient_identifier_type_id "
+	               + "JOIN person p ON "
+	               + " p.person_id = pi2.patient_id "
+	               + "WHERE "
+	               + " pit.name = 'MPI' "
+	               + " AND p.uuid = :reference";
+
+	    Object mpiId = null;
+	    
+	    try {
+	        mpiId = em.createNativeQuery(sql)
+	                  .setParameter("reference", reference)
+	                  .getSingleResult();
+	    } catch (NoResultException e) {
+	        return null; // No result found, return null
+	    }
+
+	    // Cast and return the result if it exists
+	    return (mpiId != null) ? (String) mpiId : null;
 	}
 
 }
